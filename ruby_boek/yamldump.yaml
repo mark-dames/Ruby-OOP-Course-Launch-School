@@ -1,0 +1,18 @@
+--- !ruby/object:Catalogus
+lijst:
+- !ruby/object:Artikel
+  nummer: 3
+  omschrijving: zeep
+  prijs: 1.49
+- !ruby/object:Artikel
+  nummer: 4
+  omschrijving: tandpasta
+  prijs: 1.79
+- !ruby/object:Artikel
+  nummer: 5
+  omschrijving: doucheschuim
+  prijs: 2.95
+- !ruby/object:Artikel
+  nummer: 6
+  omschrijving: bleekwater
+  prijs: 0.95

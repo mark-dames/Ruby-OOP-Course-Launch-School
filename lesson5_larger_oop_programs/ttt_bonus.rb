@@ -1,11 +1,9 @@
-require 'linguistics'
 require_relative 'ttt_3x3'
 require_relative 'ttt_5x5'
-Linguistics.use :en
 
 module Pluralize
-  def pluralize(word, n = false)
-    n == true ? word.en.plural : word
+  def pluralize(more_as_one_point)
+    more_as_one_point == true ? "points" : "point"
   end
 end
 
@@ -14,7 +12,7 @@ module Displayable
     puts "Welcome to Tic Tac Toe #{human.name}!"
     puts "The player who reach 5 points first, wins the game!"
     puts ''
-    sleep(1.0)
+    sleep(1.5)
     clear
   end
 
@@ -31,15 +29,22 @@ module Displayable
     clear_screen_and_display_board
     case board.winning_marker
     when human.marker
-      puts "Round winner:"\
-           "#{@human} #{pluralize('point', @human.score > 1)}."
+      puts "#{@human} won this round!"
     when computer.marker
-      puts "Round winner:"\
-           "#{@computer} #{pluralize('point', @computer.score > 1)}."
+      puts "#{@computer} won this round!"
     else
       puts "It's a tie!"
     end
-    sleep(1.0)
+    display_points
+    sleep(2.0)
+  end
+
+  def display_points
+    puts ""
+    puts "#{@human} has #{@human.score} "\
+         "#{pluralize(@computer.score > 1 || @human.score == 0)}"
+    puts "#{@computer} has #{@computer.score} "\
+         "#{pluralize(@computer.score > 1 || @computer.score == 0)}"
   end
 
   def display_winner
@@ -63,7 +68,7 @@ module Displayable
   end
 
   def clear
-    system 'clear'
+    system('clear') || system('cls')
   end
 end
 
@@ -178,7 +183,7 @@ class Square
   end
 
   def to_s
-    @marker
+    marker
   end
 
   def marked?
@@ -186,7 +191,7 @@ class Square
   end
 
   def unmarked?
-    @marker == INITIAL_MARKER
+    marker == INITIAL_MARKER
   end
 end
 
@@ -200,7 +205,7 @@ class TTTPlayer
   end
 
   def to_s
-    "#{name} have #{score}"
+    name
   end
 end
 
@@ -216,7 +221,8 @@ class Human < TTTPlayer
     loop do
       puts "Please enter your name:"
       name = gets.chomp
-      break if !name.start_with?(" ")
+      break if !name.empty?
+      puts "Invalid input."
     end
     name
   end
@@ -303,7 +309,7 @@ class TTTGame
     @human = Human.new(board)
     @computer = Computer.new(board)
     @current_player = FIRST_TO_MOVE
-    choose if @current_player == "choose"
+    choose_who_starts_game if @current_player == "choose"
   end
 
   def play
@@ -347,7 +353,7 @@ class TTTGame
                       end
   end
 
-  def choose
+  def choose_who_starts_game
     puts "Please make a choice who starts playing the game:"\
          "\n\thuman\n\tcomputer"
     answer = ''

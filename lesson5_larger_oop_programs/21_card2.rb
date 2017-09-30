@@ -13,17 +13,19 @@ module Displayable
   end
 
   def show_initial_cards
-    puts "#{dealer} has: #{dealer.cards[0][0]} of #{dealer.cards[0][1]} and an unknown card."
+    puts "#{dealer} has: #{dealer.cards[0][0]} of #{dealer.cards[0][1]}"\
+         " and an unknown card."
     puts "#{player} has:"
-    player.cards.each { |card| puts "#{card[0]} of #{card[1]}"}
+    player.cards.each { |card| puts "#{card[0]} of #{card[1]}" }
   end
 
   def show_player_cards
     puts "You have the following cards:"
-    player.cards.each { |card| puts "#{card[0]} of #{card[1]}"}
+    player.cards.each { |card| puts "#{card[0]} of #{card[1]}" }
   end
 
   def show_result
+    clear
     player_total = player.total
     dealer_total = dealer.total
     if player_total == dealer_total
@@ -38,10 +40,10 @@ module Displayable
 
   def show_cards
     puts "The cards of #{player} where:"
-    player.cards.each { |card| puts "#{card[0]} of #{card[1]}"}
+    player.cards.each { |card| puts "#{card[0]} of #{card[1]}" }
     puts ""
     puts "The cards of #{dealer} where:"
-    dealer.cards.each { |card| puts "#{card[0]} of #{card[1]}"}
+    dealer.cards.each { |card| puts "#{card[0]} of #{card[1]}" }
   end
 
   def display_again_message
@@ -199,19 +201,20 @@ class Game
     dealer.update_total
   end
 
-  def player_turn
+  def make_a_move
     loop do
       puts "Do you want to Hit or Stay?"
-      answer = ''
-      loop do
-        answer = gets.chomp.downcase
-        break if ['hit', 'stay'].include?(answer)
-        puts "Invalid choice. Must be hit or stay."
-      end
+      answer = gets.chomp.downcase
+      break(answer) if ['hit', 'stay'].include?(answer)
+      puts "Invalid choice. Must be hit or stay."
+    end
+  end
 
-      card = card_deck.take_card
-      player.hit(card) && player.update_total if answer == 'hit'
-      break if player.busted? || answer == 'stay'
+  def player_turn
+    loop do
+      hit_or_stay = make_a_move
+      player.hit(card_deck.take_card) && player.update_total if hit_or_stay == 'hit'
+      break if player.busted? || hit_or_stay == 'stay'
       show_player_cards
     end
   end
